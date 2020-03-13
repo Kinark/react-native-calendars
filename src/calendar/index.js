@@ -94,7 +94,7 @@ class Calendar extends Component {
     this.style = styleConstructor(this.props.theme);
 
     this.state = {
-      currentMonth: props.current ? parseDate(props.current) : XDate(),
+      currentMonth: props.current ? parseDate(props.current) : XDate()
     };
 
     this.days;
