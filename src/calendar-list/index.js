@@ -10,6 +10,8 @@ import Calendar from '../calendar';
 import CalendarListItem from './item';
 import CalendarHeader from '../calendar/header/index';
 import {STATIC_HEADER} from '../testIDs';
+import CalendarStyleConstructor from '../calendar/style';
+import CalendarDayStyleConstructor from '../calendar/day/basic/style';
 
 
 const {width} = Dimensions.get('window');
@@ -115,6 +117,8 @@ class CalendarList extends Component {
   }
 
   scrollToDay(d, offset, animated) {
+    const CalendarStyles = CalendarStyleConstructor(this.props.theme);
+    const CalendarDayStyles = CalendarDayStyleConstructor(this.props.theme);
     const day = parseDate(d);
     const diffMonths = Math.round(this.state.openDate.clone().setDate(1).diffMonths(day.clone().setDate(1)));
     const size = this.props.horizontal ? this.props.calendarWidth : this.props.calendarHeight;
@@ -126,7 +130,7 @@ class CalendarList extends Component {
       for (let i = 0; i < days.length; i++) {
         week = Math.floor(i / 7);
         if (dateutils.sameDate(days[i], day)) {
-          scrollAmount += 46 * week;
+          scrollAmount += (CalendarStyles.week.marginTop + CalendarStyles.week.marginTop + CalendarDayStyles.base.height) * week;
           break;
         }
       }
