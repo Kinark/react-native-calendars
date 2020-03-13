@@ -30,6 +30,7 @@ export default class AgendaView extends Component {
   };
 
   static propTypes = {
+    calendarHeight: PropTypes.number,
     headerHeight: PropTypes.number,
     knobHeight: PropTypes.number,
     /** Specify theme properties to override specific styles for calendar parts. Default = {} */
@@ -466,6 +467,7 @@ export default class AgendaView extends Component {
                   false
                 );
               }}
+              calendarHeight={this.props.calendarHeight}
               calendarWidth={this.viewWidth}
               theme={this.props.theme}
               onVisibleMonthsChange={this.onVisibleMonthsChange.bind(this)}
