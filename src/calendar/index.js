@@ -14,6 +14,7 @@ import SingleDay from './day/custom';
 import CalendarHeader from './header';
 import shouldComponentUpdate from './updater';
 import {SELECT_DATE_SLOT} from '../testIDs';
+import styleConstructor2 from './day/basic/style';
 
 
 //Fallback when RN version is < 0.44
@@ -93,8 +94,10 @@ class Calendar extends Component {
     this.style = styleConstructor(this.props.theme);
 
     this.state = {
-      currentMonth: props.current ? parseDate(props.current) : XDate()
+      currentMonth: props.current ? parseDate(props.current) : XDate(),
     };
+
+    this.days;
 
     this.updateMonth = this.updateMonth.bind(this);
     this.addMonth = this.addMonth.bind(this);
@@ -158,7 +161,7 @@ class Calendar extends Component {
     this.updateMonth(this.state.currentMonth.clone().addMonths(count, true));
   }
 
-  renderDay(day, id) {
+  renderDay(day, id, corner) {
     const minDate = parseDate(this.props.minDate);
     const maxDate = parseDate(this.props.maxDate);
     let state = '';
@@ -172,8 +175,11 @@ class Calendar extends Component {
       state = 'today';
     }
 
+    const style = styleConstructor2(this.props.theme);
+    const cornerBaseStyle = corner ? style[`base${corner}`] : undefined;
+
     if (!dateutils.sameMonth(day, this.state.currentMonth) && this.props.hideExtraDays) {
-      return (<View key={id} style={{flex: 1}}/>);
+      return (<View key={id} style={{flex: 1, alignItems: 'center'}}><View style={[style.base, cornerBaseStyle]}/></View>);
     }
 
     const DayComp = this.getDayComponent();
@@ -192,6 +198,7 @@ class Calendar extends Component {
           date={dateAsObject}
           marking={this.getDateMarking(day)}
           accessibilityLabel={accessibilityLabel}
+          corner={corner}
         >
           {date}
         </DayComp>
@@ -260,27 +267,32 @@ class Calendar extends Component {
     }
   }
 
-  renderWeekNumber(weekNumber) {
+  renderWeekNumber(weekNumber, corner) {
     return (
       <Day 
         key={`week-${weekNumber}`} 
         theme={this.props.theme} 
         marking={{disableTouchEvent: true}} 
         state='disabled'
+        corner={corner}
       >
         {weekNumber}
       </Day>
     );
   }
 
-  renderWeek(days, id) {
+  renderWeek(days, id, corner) {
     const week = [];
     days.forEach((day, id2) => {
-      week.push(this.renderDay(day, id2));
+      let newCorner = corner;
+      if(newCorner) {
+        if(id2 === 0) newCorner += 'Left'; else if (id2 === days.length - 1) newCorner += 'Right';
+      }
+      week.push(this.renderDay(day, id2, newCorner));
     }, this);
 
     if (this.props.showWeekNumbers) {
-      week.unshift(this.renderWeekNumber(days[days.length - 1].getWeek()));
+      week.unshift(this.renderWeekNumber(days[days.length - 1].getWeek(), corner));
     }
 
     return (<View style={this.style.week} key={id}>{week}</View>);
@@ -288,9 +300,18 @@ class Calendar extends Component {
 
   render() {
     const days = dateutils.page(this.state.currentMonth, this.props.firstDay);
+    if (!this.days) this.days = days.length;
     const weeks = [];
     while (days.length) {
-      weeks.push(this.renderWeek(days.splice(0, 7), weeks.length));
+      let topOrBottom = undefined;
+      if (weeks.length === 0) {
+        topOrBottom = 'Upper';
+      } else if (this.days === 35 && weeks.length === 4) {
+        topOrBottom = 'Bottom';
+      } else if (this.days === 42 && weeks.length === 5) {
+        topOrBottom = 'Bottom';
+      }
+      weeks.push(this.renderWeek(days.splice(0, 7), weeks.length,  topOrBottom ));
     }
 
     let indicator;

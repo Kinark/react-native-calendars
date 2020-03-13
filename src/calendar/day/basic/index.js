@@ -17,7 +17,8 @@ class Day extends Component {
     marking: PropTypes.any,
     onPress: PropTypes.func,
     onLongPress: PropTypes.func,
-    date: PropTypes.object
+    date: PropTypes.object,
+    corner: PropTypes.oneOf(['UpperLeft', 'UpperRight', 'BottomLeft', 'BottomRight'])
   };
 
   constructor(props) {
@@ -41,8 +42,10 @@ class Day extends Component {
   }
 
   render() {
-    const containerStyle = [this.style.base];
-    const textStyle = [this.style.text];
+    const cornerBaseStyle = this.props.corner ? this.style[`base${this.props.corner}`] : undefined;
+    const cornerTextStyle = this.props.corner ? this.style[`base${this.props.corner}`] : undefined;
+    const containerStyle = [this.style.base, cornerBaseStyle];
+    const textStyle = [this.style.text, cornerTextStyle];
     const dotStyle = [this.style.dot];
     
     let marking = this.props.marking || {};

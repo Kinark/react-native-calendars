@@ -11,6 +11,14 @@ export default function styleConstructor(theme={}) {
       height: 32,
       alignItems: 'center'
     },
+    baseUpperLeft: {},
+    baseUpperRight: {},
+    baseBottomLeft: {},
+    baseBottomRight: {},
+    textUpperLeft: {},
+    textUpperRight: {},
+    textBottomLeft: {},
+    textBottomRight: {},
     text: {
       marginTop: Platform.OS === 'android' ? 4 : 6,
       fontSize: appStyle.textDayFontSize,
