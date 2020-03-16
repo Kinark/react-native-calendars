@@ -453,7 +453,7 @@ export default class AgendaView extends Component {
       <View
         onLayout={this.onLayout}
         style={[this.props.style, {flex: 1, overflow: 'hidden'}]}>
-        <View style={this.styles.reservations}>
+        <View style={[this.styles.reservations, {marginTop: this.props.headerHeight}]}>
           {this.renderReservations()}
         </View>
         <Animated.View style={headerStyle}>
