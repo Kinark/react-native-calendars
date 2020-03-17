@@ -213,6 +213,8 @@ class ReservationList extends Component {
         onScrollEndDrag={this.props.onScrollEndDrag}
         onMomentumScrollBegin={this.props.onMomentumScrollBegin}
         onMomentumScrollEnd={this.props.onMomentumScrollEnd}
+        ListHeaderComponent={this.props.ListHeaderComponent}
+        stickyHeaderIndices={[0]}
       />
     );
   }
